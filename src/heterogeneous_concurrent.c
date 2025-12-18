@@ -361,8 +361,10 @@ int main(int argc, char** argv) {
     printf("Using %d device(s)\n", num_devices_to_use);
     
     // Split workload
-    int images_per_device = NUM_IMAGES / num_devices_to_use;
-    int remaining = NUM_IMAGES % num_devices_to_use;
+    //int images_per_device = NUM_IMAGES / num_devices_to_use;
+    //int remaining = NUM_IMAGES % num_devices_to_use;
+
+    float device_weights[] = {0.77, 0.23}; // Example weights for 2 devices
     
     printf("\n=== Workload Distribution ===\n");
     
@@ -375,8 +377,14 @@ int main(int argc, char** argv) {
     
     int start_idx = 0;
     for (int i = 0; i < num_devices_to_use; i++) {
-        int end_idx = start_idx + images_per_device + (i < remaining ? 1 : 0);
-        int num_images_device = end_idx - start_idx;
+        int images_for_device = (int)(NUM_IMAGES * device_weights[i]);
+        int end_idx = start_idx + images_for_device;
+        //int end_idx = start_idx + images_per_device + (i < remaining ? 1 : 0);
+        //int num_images_device = end_idx - start_idx;
+
+        if (i == num_devices_to_use - 1) {
+        end_idx = NUM_IMAGES;
+    }
         
         printf("Device %d (%s): Processing images %d to %d (%d images)\n",
                i, devices[i].device_name, start_idx, end_idx - 1, num_images_device);
@@ -521,9 +529,9 @@ int main(int argc, char** argv) {
         printf("  Comm/Comp ratio:    %.3f\n", ratio);
         
         if (ratio > 1.0) {
-            printf("  ⚠️  BOTTLENECK: Communication-bound (transfers are %.1fx slower than kernel)\n", ratio);
+            printf(" BOTTLENECK: Communication-bound (transfers are %.1fx slower than kernel)\n", ratio);
         } else {
-            printf("  ⚠️  BOTTLENECK: Computation-bound (kernel is %.1fx slower than transfers)\n", 1.0/ratio);
+            printf(" BOTTLENECK: Computation-bound (kernel is %.1fx slower than transfers)\n", 1.0/ratio);
         }
     }
     
@@ -538,11 +546,6 @@ int main(int argc, char** argv) {
     free(image_stream);
     free(gaussian_filter);
     free(kernel_source);
-    
-    printf("\n=== Processing Complete ===\n");
-    printf("✓ Concurrent heterogeneous execution with pthreads\n");
-    printf("✓ True parallel processing on multiple devices\n");
-    printf("✓ Real speedup achieved\n");
     
     return 0;
 }
