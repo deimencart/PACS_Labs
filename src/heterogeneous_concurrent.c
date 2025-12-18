@@ -387,7 +387,7 @@ int main(int argc, char** argv) {
     }
         
         printf("Device %d (%s): Processing images %d to %d (%d images)\n",
-               i, devices[i].device_name, start_idx, end_idx - 1, num_images_device);
+               i, devices[i].device_name, start_idx, end_idx - 1, images_for_device);
         
         // Setup thread arguments
         thread_args[i].device = &devices[i];
