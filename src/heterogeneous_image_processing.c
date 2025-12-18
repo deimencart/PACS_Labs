@@ -243,7 +243,7 @@ int main(int argc, char** argv) {
     cl_int err;
     
     // Configuration
-    const int NUM_IMAGES = 100;
+    const int NUM_IMAGES = 1000;
     const int FILTER_SIZE = 5;
     const float SIGMA = 1.5f;
     
@@ -344,8 +344,11 @@ int main(int argc, char** argv) {
     printf("Using %d device(s)\n", num_devices_to_use);
     
     // Split workload
-    int images_per_device = NUM_IMAGES / num_devices_to_use;
-    int remaining = NUM_IMAGES % num_devices_to_use;
+    //int images_per_device = NUM_IMAGES / num_devices_to_use;
+    //int remaining = NUM_IMAGES % num_devices_to_use;
+
+    float device_weights[] = {0.75, 0.25}; // Example weights for 2 devices
+
     
     printf("\n=== Workload Distribution ===\n");
     TimingInfo timings[2];
@@ -354,8 +357,13 @@ int main(int argc, char** argv) {
     
     int start_idx = 0;
     for (int i = 0; i < num_devices_to_use; i++) {
-        int end_idx = start_idx + images_per_device + (i < remaining ? 1 : 0);
-        int num_images_device = end_idx - start_idx;
+        int num_images_device = (int)(NUM_IMAGES * device_weights[i]);
+        int end_idx = start_idx + num_images_device;
+
+        if (i == num_devices_to_use - 1) {
+            end_idx = NUM_IMAGES; // Ensure all images are processed
+        }
+        
         
         printf("Device %d (%s): Processing images %d to %d (%d images)\n",
                i, devices[i].device_name, start_idx, end_idx - 1, num_images_device);
