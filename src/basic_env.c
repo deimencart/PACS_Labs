@@ -22,7 +22,7 @@
 #endif
 
 
-#ifdef M_PI
+#ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 	  
@@ -46,7 +46,7 @@
 	double times[8];
 	for (int indice=0;indice<6;indice++){
 		width *= 2;
-		size_t count = (size_t)(width*width);
+		count = (size_t)(width) * (size_t)(width);
 	for (int repetition=0;repetition<5;repetition++){
 	  clock_t starttt = clock();
 	  int err;                            	// error code returned from api calls
@@ -79,9 +79,12 @@
 	  if (!in_host_object || !out_host_object) { printf("malloc failed\n"); exit(1); }
 	  
 	  for (int i = 0; i < count; i++){
-		in_host_object[i] = 10;                      // (float) i a remplacer pour test si fonctionne meme si un peu compliquer de vérifier la coherance car en transformation comme si en deux D
+		in_host_object[i] = 10;  
+		free(in_host_object);
+		free(out_host_object)                    // (float) i a remplacer pour test si fonctionne meme si un peu compliquer de vérifier la coherance car en transformation comme si en deux D
 	  }
-
+	  
+	
 // valeur a donner
 
 int gaussienSize = 3;
@@ -241,12 +244,12 @@ fclose(fileHandler);
 	  cl_error(err, "Failed to launch kernel");
 
 	  clWaitForEvents(1, &event);
-	  clReleaseEvent(event);
-
+	  
 	cl_ulong start, end;
 	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(start), &start, NULL);
 	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(end), &end, NULL);
 
+	clReleaseEvent(event);
 	temp[repetition]=(double)(end - start);
 
 
@@ -280,7 +283,7 @@ fclose(fileHandler);
 	temps[indice]=summ/(double)5.0;
 	times[indice]=summs/(double)5.0;
 	}
-	for (int rep=0;rep<8;rep++){
+	for (int rep=0;rep<6;rep++){
 	printf(" %.6f", times[rep]);
 	//printf(" %.6f", temps[rep]);
 	}
