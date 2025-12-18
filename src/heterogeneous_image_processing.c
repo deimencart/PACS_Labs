@@ -347,7 +347,7 @@ int main(int argc, char** argv) {
     //int images_per_device = NUM_IMAGES / num_devices_to_use;
     //int remaining = NUM_IMAGES % num_devices_to_use;
 
-    float device_weights[] = {0.75, 0.25}; // Example weights for 2 devices
+    float device_weights[] = {0.654, 0.346}; // Example weights for 2 devices
 
     
     printf("\n=== Workload Distribution ===\n");
