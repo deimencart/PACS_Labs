@@ -81,7 +81,7 @@
 	  for (int i = 0; i < count; i++){
 		in_host_object[i] = 10;  
 		free(in_host_object);
-		free(out_host_object)                    // (float) i a remplacer pour test si fonctionne meme si un peu compliquer de vérifier la coherance car en transformation comme si en deux D
+		free(out_host_object);                    // (float) i a remplacer pour test si fonctionne meme si un peu compliquer de vérifier la coherance car en transformation comme si en deux D
 	  }
 	  
 	
